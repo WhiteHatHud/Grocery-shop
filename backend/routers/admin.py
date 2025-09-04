@@ -1,12 +1,13 @@
 from datetime import datetime, timezone
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.orm import Session
 from core.dependencies import get_db, get_current_admin
 from models.admin_user import AdminUser
 from models.post import Post, PostStatus
 from schemas.post import PostCreate, PostUpdate, PostResponse
 from utils.slug import generate_unique_slug
+from utils.s3 import s3_service
 
 router = APIRouter()
 
@@ -105,3 +106,33 @@ async def delete_post(
         db.delete(db_post)
         db.commit()
         return {"message": "Post permanently deleted successfully"}
+    
+@router.post("/upload-image")
+async def upload_image(
+    file: UploadFile = File(...),
+    current_admin = Depends(get_current_admin)
+):
+    """
+    Upload an image to S3 and return the URL
+    """
+    # Validate file type
+    allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Invalid file type")
+    
+    # Validate file size (15MB limit)
+    contents = await file.read()
+    if len(contents) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="File too large (max 15MB)")
+    
+    # Upload to S3
+    url = s3_service.upload_file(
+        file_content=contents,
+        file_name=file.filename,
+        content_type=file.content_type
+    )
+    
+    if not url:
+        raise HTTPException(status_code=500, detail="Failed to upload image")
+    
+    return {"url": url}
