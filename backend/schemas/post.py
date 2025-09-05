@@ -11,6 +11,7 @@ class PostBase(BaseModel):
     tags: Optional[List[str]] = []
     cover_image_url: Optional[str] = None
     external_links: Optional[List[str]] = []
+    pinned: Optional[bool] = False
 
 class PostCreate(PostBase):
     status: PostStatus = PostStatus.draft
@@ -34,6 +35,7 @@ class PostResponse(PostBase):
     created_at: datetime
     updated_at: Optional[datetime]
     published_at: Optional[datetime]
+    pinned: bool
 
 class PostList(BaseModel):
     posts: List[PostResponse]

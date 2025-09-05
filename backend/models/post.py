@@ -30,3 +30,4 @@ class Post(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     published_at = Column(DateTime(timezone=True), nullable=True)
     deleted = Column(Boolean, default=False)
+    pinned = Column(Boolean, default=False, nullable=False)

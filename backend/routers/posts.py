@@ -6,6 +6,8 @@ from core.dependencies import get_db
 from models.post import Post, PostStatus, PostType
 from schemas.post import PostResponse, PostList
 from schemas.common import PaginationParams
+from models.admin_user import AdminUser
+from core.dependencies import get_current_admin
 
 router = APIRouter()
 
@@ -24,15 +26,11 @@ async def list_posts(
         Post.status == PostStatus.published,
         Post.deleted == False
     )
-    
     # Apply filters
     if type:
         query = query.filter(Post.type == type)
-    
     if tag:
-        # SQLite JSON support
         query = query.filter(Post.tags.contains(f'"{tag}"'))
-    
     if q:
         search_term = f"%{q}%"
         query = query.filter(
@@ -42,22 +40,13 @@ async def list_posts(
                 Post.content_md.ilike(search_term)
             )
         )
-    
-    # Apply sorting
-    if sort == "newest":
-        query = query.order_by(desc(Post.published_at))
-    elif sort == "oldest":
-        query = query.order_by(asc(Post.published_at))
-    elif sort == "title":
-        query = query.order_by(asc(Post.title))
-    
+    # Apply sorting (pinned first)
+    query = query.order_by(desc(Post.pinned), desc(Post.published_at))
     # Get total count
     total = query.count()
-    
     # Apply pagination
     offset = (page - 1) * page_size
     posts = query.offset(offset).limit(page_size).all()
-    
     return PostList(
         posts=posts,
         total=total,

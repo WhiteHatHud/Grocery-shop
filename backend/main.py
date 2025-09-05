@@ -46,10 +46,11 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(health.router, tags=["health"])
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
-app.include_router(admin.router, prefix="/admin", tags=["admin"])
-app.include_router(posts.router, prefix="/posts", tags=["posts"])
+api_prefix = settings.API_PREFIX or ""
+app.include_router(health.router, prefix=f"{api_prefix}/health", tags=["health"])
+app.include_router(auth.router, prefix=f"{api_prefix}/auth", tags=["auth"])
+app.include_router(admin.router, prefix=f"{api_prefix}/admin", tags=["admin"])
+app.include_router(posts.router, prefix=f"{api_prefix}/posts", tags=["posts"])
 
 @app.get("/")
 async def root():

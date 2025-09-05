@@ -136,3 +136,32 @@ async def upload_image(
         raise HTTPException(status_code=500, detail="Failed to upload image")
     
     return {"url": url}
+
+
+@router.post("/posts/{post_id}/pin", response_model=PostResponse)
+async def pin_post(
+    post_id: str,
+    db: Session = Depends(get_db),
+    current_admin: AdminUser = Depends(get_current_admin)
+):
+    post = db.query(Post).filter(Post.id == post_id, Post.deleted == False).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    post.pinned = True
+    db.commit()
+    db.refresh(post)
+    return post
+
+@router.post("/posts/{post_id}/unpin", response_model=PostResponse)
+async def unpin_post(
+    post_id: str,
+    db: Session = Depends(get_db),
+    current_admin: AdminUser = Depends(get_current_admin)
+):
+    post = db.query(Post).filter(Post.id == post_id, Post.deleted == False).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    post.pinned = False
+    db.commit()
+    db.refresh(post)
+    return post
