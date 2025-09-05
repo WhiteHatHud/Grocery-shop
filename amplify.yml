@@ -3,7 +3,13 @@ frontend:
   phases:
     build:
       commands:
-        - cd frontend && npm ci && npm run build
+        - pwd  # Show current directory
+        - ls -la  # Show what's in root
+        - ls -la frontend/  # Verify frontend folder exists
+        - cd frontend && pwd  # Verify we can cd into frontend
+        - cd frontend && ls -la  # Show what's in frontend
+        - cd frontend && npm ci
+        - cd frontend && npm run build
   artifacts:
     baseDirectory: frontend/dist
     files:
