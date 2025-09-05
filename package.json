@@ -2,7 +2,7 @@
   "name": "wfhubby",
   "version": "1.0.0",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build && npm run dev",
+    "build": "cd frontend && npm install && npm run build",
     "start": "node server.js"
   },
   "dependencies": {
