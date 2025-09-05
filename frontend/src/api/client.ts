@@ -1,7 +1,7 @@
 import { Post, CreatePostRequest, LoginResponse, PostsListResponse, PostFilters } from '@/types';
 
 const API_PREFIX = '/api/v1';
-const API_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:8000') + API_PREFIX;
+const API_BASE = (import.meta.env.VITE_API_BASE || 'https://wfhubby.onrender.com') + API_PREFIX;
 
 class ApiClient {
   async deletePost(postId: string | number): Promise<void> {
