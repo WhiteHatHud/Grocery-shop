@@ -1,8 +1,12 @@
 {
-  "devDependencies": {
-    "concurrently": "^9.2.1"
-  },
+  "name": "wfhubby",
+  "version": "1.0.0",
   "scripts": {
-    "dev": "concurrently \"cd backend && uv run uvicorn main:app --reload\" \"cd frontend && npm run dev\""
+    "build": "cd frontend && npm install && npm run build && npm run dev",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "child_process": "^1.0.2"
   }
 }
