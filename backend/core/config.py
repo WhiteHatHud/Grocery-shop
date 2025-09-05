@@ -23,8 +23,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./app.db"
     
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000, http://localhost:8000, http://localhost:8080"]
-    
+    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000", "http://localhost:8080", "https://www.wfhubby.com"]
+
     # API
     API_PREFIX: str = ""
     DOCS_URL: str = "/docs"
