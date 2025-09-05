@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   backend:
     build: ./backend
@@ -5,28 +7,13 @@ services:
       - "8000:8000"
     env_file:
       - ./backend/.env
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
+    restart: unless-stopped
+
   frontend:
     build: ./frontend
+    
     ports:
-      - "8081:8081"
-    environment:
-      VITE_API_BASE: http://localhost:8000
+      - "8080:8080"
     depends_on:
       - backend
-  db:
-    image: postgres:15
-    restart: always
-    environment:
-      POSTGRES_DB: wfhubby
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: wfhubby123
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-volumes:
-  pgdata:
+    restart: unless-stopped
