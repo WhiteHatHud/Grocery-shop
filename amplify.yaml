@@ -1,34 +1,16 @@
 version: 1
-applications:
-  - frontend:
-      phases:
-        preBuild:
-          commands:
-            - cd frontend
-            - npm install
-        build:
-          commands:
-            - npm run dev
-      artifacts:
-        baseDirectory: frontend/dist
-        files:
-          - '**/*'
-      cache:
-        paths:
-          - frontend/node_modules/**/*
-    backend:
-      phases:
-        preBuild:
-          commands:
-            - cd backend
-            - python3 -m venv venv
-            - source venv/bin/activate
-            - pip install -r requirements.txt
-        build:
-          commands:
-            - echo "Backend dependencies installed"
-      artifacts:
-        baseDirectory: backend
-        files:
-          - '**/*'
-    appRoot: .
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
